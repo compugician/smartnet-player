@@ -11,8 +11,10 @@ var Db = require('mongodb').Db,
   Connection = require('mongodb').Connection,
   Server = require('mongodb').Server;
 
-var host = process.env['MONGO_NODE_DRIVER_HOST'] != null ? process.env['MONGO_NODE_DRIVER_HOST'] : 'localhost';
-var port = process.env['MONGO_NODE_DRIVER_PORT'] != null ? process.env['MONGO_NODE_DRIVER_PORT'] : Connection.DEFAULT_PORT;
+var dbhostfallback = process.env.PORT ? 'proximus.modulusmongo.net' : 'localhost'; //are we on Modulus.IO?
+var dbportfallback = process.env.PORT ? 27017 : Connection.DEFAULT_PORT; //are we on Modulus.IO?
+var host = process.env['MONGO_NODE_DRIVER_HOST'] != null ? process.env['MONGO_NODE_DRIVER_HOST'] : dbhostfallback;
+var port = process.env['MONGO_NODE_DRIVER_PORT'] != null ? process.env['MONGO_NODE_DRIVER_PORT'] : dbportfallback;
 var scanner = new Db('scanner', new Server(host, port, {}));
 var db;
 var channels = {};
@@ -97,7 +99,7 @@ function add_file(files, i) {
 
 
 
-var source_path = '/home/luke/smartnet-upload';
+var source_path = __dirname+'/smartnet-upload';
 
 scanner.open(function(err, scannerDb) {
   db = scannerDb;

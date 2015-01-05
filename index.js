@@ -28,9 +28,11 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 
 
+var dbhostfallback = process.env.PORT ? 'proximus.modulusmongo.net' : 'localhost'; //are we on Modulus.IO?
+var dbportfallback = process.env.PORT ? 27017 : Connection.DEFAULT_PORT; //are we on Modulus.IO?
+var host = process.env['MONGO_NODE_DRIVER_HOST'] != null ? process.env['MONGO_NODE_DRIVER_HOST'] : dbhostfallback;
+var port = process.env['MONGO_NODE_DRIVER_PORT'] != null ? process.env['MONGO_NODE_DRIVER_PORT'] : dbportfallback;
 
-var host = process.env['MONGO_NODE_DRIVER_HOST'] != null ? process.env['MONGO_NODE_DRIVER_HOST'] : 'localhost';
-var port = process.env['MONGO_NODE_DRIVER_PORT'] != null ? process.env['MONGO_NODE_DRIVER_PORT'] : Connection.DEFAULT_PORT;
 var scanner = new Db('scanner', new Server(host, port, {}));
 var db;
 var channels = {};
@@ -965,7 +967,7 @@ function notify_clients(call) {
     }
   }
 }
-watch.createMonitor('/home/luke/smartnet-upload', function(monitor) {
+watch.createMonitor(__dirname+'/smartnet-upload', function(monitor) {
   monitor.files['*.m4a'];
   //monitor.files['*.wav'];
 
@@ -986,7 +988,7 @@ watch.createMonitor('/home/luke/smartnet-upload', function(monitor) {
         var time = new Date(parseInt(result[2]) * 1000);
         var freq = parseFloat(result[3]);
         //var base_path = '/srv/www/openmhz.com/media';
-        var base_path = '/srv/www/openmhz.com/public/media';
+        var base_path = __dirname+'/public/media';
         var local_path = "/" + time.getFullYear() + "/" + time.getMonth() + "/" + time.getDate() + "/";
         mkdirp.sync(base_path + local_path, function(err) {
           if (err) console.error(err);
@@ -1110,4 +1112,6 @@ io.sockets.on('connection', function(socket) {
   });
   socket.emit('ready', {});
 });
-server.listen(3004);
+
+var listenPort = process.env.PORT || 3004;
+server.listen(listenPort);
