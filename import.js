@@ -19,7 +19,7 @@ var scanner = new Db('scanner', new Server(host, port, {}));
 var db;
 var channels = {};
 
-const FILE_EXTENSION = '.mp3';
+const FILE_EXTENSION = '.m4a';
 
 function compile(str, path) {
   return stylus(str)
