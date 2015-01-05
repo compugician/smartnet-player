@@ -376,7 +376,7 @@ passport.deserializeUser(function(id, done) {
 twitterAuthn = new TwitterStrategy({
     consumerKey: config.twitterConsumerKey, 
     consumerSecret: config.twitterConsumerSecret, 
-    callbackURL: "http://openmhz.com/auth/twitter/callback"
+    callbackURL: "http://scannergrabber.com/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, done) {
     // asynchronous verification, for effect...
@@ -987,7 +987,7 @@ watch.createMonitor(__dirname+'/smartnet-upload', function(monitor) {
         var tg = parseInt(result[1]);
         var time = new Date(parseInt(result[2]) * 1000);
         var freq = parseFloat(result[3]);
-        //var base_path = '/srv/www/openmhz.com/media';
+
         var base_path = __dirname+'/public/media';
         var local_path = "/" + time.getFullYear() + "/" + time.getMonth() + "/" + time.getDate() + "/";
         mkdirp.sync(base_path + local_path, function(err) {

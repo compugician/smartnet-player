@@ -13,13 +13,13 @@ html
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     meta(http-equiv="Content-Type" content="text/html; charset=utf-8")
     meta(name="twitter:card" content="player")
-    meta(name="twitter:site" content="@openmhz")
+    meta(name="twitter:site" content="@ScannerGrabber")
     if channel
       meta(name="twitter:title" content="#{channel.alpha} #{time} #{date}")
       meta(name="twitter:description" content="This is a call from talkgroup #{channel.desc}")
-    meta(name="twitter:image" content="https://openmhz.com/img/player.png")
-    meta(name="twitter:player" content="https://openmhz.com/card/#{objectId}")
-    meta(name="twitter:player:stream" content="https://openmhz.com/media#{item.path}#{item.name}")
+    meta(name="twitter:image" content="https://ScannerGrabber.com/img/player.png")
+    meta(name="twitter:player" content="https://ScannerGrabber.com/card/#{objectId}")
+    meta(name="twitter:player:stream" content="https://ScannerGrabber.com/media#{item.path}#{item.name}")
     meta(name="twitter:player:stream:content_type" content="audio/mp4")
     meta(name="twitter:player:width" content="422")
     meta(name="twitter:player:height" content="114")
@@ -97,7 +97,7 @@ html
               -for(var src in srcList)
                 .col-md-2
                   h4 
-                    a(href='http://openmhz.com/scanner/src-'+ srcList[src]) #{srcList[src]}
+                    a(href='http://ScannerGrabber.com/scanner/src-'+ srcList[src]) #{srcList[src]}
                   small Source
 
 
@@ -136,8 +136,9 @@ html
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', 'UA-45563211-1', 'openmhz.com');
+      ga('create', 'UA-58196649-1', 'auto');
       ga('send', 'pageview');
+
       
 
 

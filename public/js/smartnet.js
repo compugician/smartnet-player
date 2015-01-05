@@ -246,7 +246,7 @@ function print_call_row(call, direction, live) {
 
 	var callview = $('<a href="/call/' + call.objectId + '"><i class="icon-file call-link"> </i></a><a href="/call/' + call.objectId + '"><span class="glyphicon glyphicon-link call-link"></span></a>');
 	var linkview = $('<i class="icon-share-alt"> </i><span class="glyphicon glyphicon-bullhorn"></span>');
-	var downloadview = $('<a href="http://openmhz.com/media' + call.filename +'"><span class="glyphicon glyphicon-download-alt download-link"></span></a>');
+	var downloadview = $('<a href="http://scannergrabber.com/media' + call.filename +'"><span class="glyphicon glyphicon-download-alt download-link"></span></a>');
 	if (call.stars == 0 ) {
 		var starbutton = $('<span class="glyphicon glyphicon-star-empty star-button"></span>');
 		var	starcount = $('<span class="star-count"></span>');
@@ -294,8 +294,8 @@ function print_call_row(call, direction, live) {
 			});
 			var row = $(this).closest("tr");
 			var objectId = row.data("objectId");
-			$('#modal-tweet-url').text('+ http://openmhz.com/call/'+ objectId);
-			$('#modal-tweet-text-url').val('http://openmhz.com/call/'+ objectId);
+			$('#modal-tweet-url').text('+ http://scannergrabber.com/call/'+ objectId);
+			$('#modal-tweet-text-url').val('http://scannergrabber.com/call/'+ objectId);
 		}
 	});
 
@@ -488,7 +488,7 @@ function socket_connect() {
 
 	if (!socket) {
 		//console.log('func socket_connect');
-		socket = io.connect('http://openmhz.com');
+		socket = io.connect('http://scannergrabber.com');
 		socket.on('calls', function(data) {
 			//console.log("Socket.io - Recv: " + data);
 			if (typeof data.calls !== "undefined") {
