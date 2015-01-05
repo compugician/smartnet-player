@@ -19,6 +19,8 @@ var scanner = new Db('scanner', new Server(host, port, {}));
 var db;
 var channels = {};
 
+const FILE_EXTENSION = '.mp3';
+
 function compile(str, path) {
   return stylus(str)
     .set('filename', path)
@@ -31,15 +33,13 @@ function add_file(files, i) {
     console.log("Trying: " +f);
     
 
-    if ((path.extname(f) == '.mp3')) {
-      var name = path.basename(f, '.mp3');
-    //if ((path.extname(f) == '.wav')) {
-    //  var name = path.basename(f, '.wav');
+    if ((path.extname(f) == FILE_EXTENSION)) {
+      var name = path.basename(f, FILE_EXTENSION);
       var regex = /([0-9]*)-([0-9]*)/
       var result = name.match(regex);
       var tg = parseInt(result[1]);
       var time = new Date(parseInt(result[2]) * 1000);
-      var base_path = '/srv/www/openmhz.com/media';
+      var base_path = __dirname+'/media';
       var local_path = "/" + time.getFullYear() + "/" + time.getMonth() + "/" + time.getDate() + "/";
       var target_path = base_path + local_path;
       console.log("Target Path: " + target_path);
