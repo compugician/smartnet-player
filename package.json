@@ -1,0 +1,12 @@
+{
+  "name": "PublicRecord-OpenMHZ",
+  "version": "0.1.0",
+  "main": "index.js",
+  "description": "Emergency Radio Scanner",
+  "author": "Tal Achituv <tal@media.mit.edu>",
+  "dependencies": {
+    "express": "3.x.x", "watch": "*", "node-ffprobe": "*", "wav": "*", "node-schedule": "*", "mkdirp": "*", "fs": "*", "path": "*", "mongodb": "*", "csv": "*", "socket.io": "*", "passport": "*", "passport-twitter": "*", "probe": "*", "util": "*", "sys": "*", "morgan": "*", "cookie-parser": "*", "body-parser": "*", "express-session": "*", "method-override": "*", "jade": "*", "express-jade": "*"
+  },
+  "repository": { "type": "git", "url": "https://github.com/robotastic/smartnet-player.git" }
+}
+
