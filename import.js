@@ -28,7 +28,7 @@ function compile(str, path) {
 }
 
 function add_file(files, i) {
-    if ( i< files.length) {
+  if ( i< files.length) {
     var f = path.join(source_path, files[i]);
     console.log("Trying: " +f);
     
@@ -105,6 +105,10 @@ scanner.open(function(err, scannerDb) {
   db = scannerDb;
   scannerDb.authenticate(config.dbUser, config.dbPass, function() {});
 
+  if (!fs.existsSync(source_path)){
+    console.log("Created Path: " + source_path);
+    fs.mkdirSync(source_path);
+  }
 
   var files = fs.readdirSync(source_path);
   console.log("Found " + files.length + " Files");
