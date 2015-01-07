@@ -19,7 +19,7 @@ var scanner = new Db('scanner', new Server(host, port, {}));
 var db;
 var channels = {};
 
-const FILE_EXTENSION = '.m4a';
+const FILE_EXTENSIONS = ['.m4a', '.wav', '.mp3']; //MUST ALL BE LOWER CASE
 
 function compile(str, path) {
   return stylus(str)
@@ -27,19 +27,28 @@ function compile(str, path) {
     .use(nib())
 }
 
+function validExtension(ext) {
+  for (i=0; i<FILE_EXTENSIONS.length; i++) {
+    if (FILE_EXTENSIONS[i].toLowerCase() == ext.toLowerCase()) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function add_file(files, i) {
   if ( i< files.length) {
     var f = path.join(source_path, files[i]);
     console.log("Trying: " +f);
     
-
-    if ((path.extname(f) == FILE_EXTENSION)) {
-      var name = path.basename(f, FILE_EXTENSION);
+    var ext = path.extname(f);
+    if (validExtension(ext)) {
+      var name = path.basename(f, ext);
       var regex = /([0-9]*)-([0-9]*)/
       var result = name.match(regex);
       var tg = parseInt(result[1]);
       var time = new Date(parseInt(result[2]) * 1000);
-      var base_path = __dirname+'/media';
+      var base_path = __dirname+'/public/media';
       var local_path = "/" + time.getFullYear() + "/" + time.getMonth() + "/" + time.getDate() + "/";
       var target_path = base_path + local_path;
       console.log("Target Path: " + target_path);

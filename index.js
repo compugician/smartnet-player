@@ -9,7 +9,11 @@ var mkdirp = require('mkdirp');
 var app = express(),
   http = require('http'),
   server = http.createServer(app),
-  io = require('socket.io').listen(server);
+  io = require('socket.io')({
+		'close timeout': 200,
+		'heartbeat timeout': 200,
+		'heartbeat interval': 90
+	}).listen(server);
 var csv = require('csv');
 var sys = require('sys');
 var fs = require('fs');
@@ -33,7 +37,7 @@ var dbportfallback = process.env.PORT ? 27017 : Connection.DEFAULT_PORT; //are w
 var host = process.env['MONGO_NODE_DRIVER_HOST'] != null ? process.env['MONGO_NODE_DRIVER_HOST'] : dbhostfallback;
 var port = process.env['MONGO_NODE_DRIVER_PORT'] != null ? process.env['MONGO_NODE_DRIVER_PORT'] : dbportfallback;
 
-var scanner = new Db('scanner', new Server(host, port, {}));
+var scanner = new Db('scanner', new Server(host, port, {}), {safe:false});
 var db;
 var channels = {};
 var clients = [];
@@ -41,7 +45,7 @@ var stats = {};
 var sources = {};
 var source_names = {};
 
-io.set('log level', 1);
+//io.set('log level', 1); //they switched... see: https://github.com/Automattic/socket.io/issues/1564
 
 scanner.open(function(err, scannerDb) {
   db = scannerDb;
@@ -72,6 +76,7 @@ scanner.open(function(err, scannerDb) {
 
 var numResults = 50;
 var talkgroup_filters = {};
+
 talkgroup_filters['group-fire'] = [1616, 1632, 1648, 1680, 1696, 1712, 1744, 1760, 1776, 1808, 1824, 1840, 1872, 1888, 1904, 1920, 1936, 1952, 1968, 2000, 2016, 2048, 2064, 2080, 2096, 2112, 2128, 2144, 2160, 2176, 2192, 2224, 2240, 2272, 2288, 2304, 2320, 2336, 2352, 2368, 2384, 2400, 2416, 2432, 2448, 2464, 2480, 2496, 2512, 2592, 2608, 2640, 2720, 2736, 2752, 2848, 2864, 2880, 9808, 9824, 9840, 9872, 9984, 10032, 40000, 40032];
 
 talkgroup_filters['group-common'] = [2656, 2672, 9936, 9968, 16624, 19248, 33616, 33648, 35536, 35568, 37456, 37488, 37648, 37680, 59952, 59968];
@@ -95,14 +100,15 @@ talkgroup_filters['tag-transportation'] = [ 40080,35632,35600,34576,34512 ];
 talkgroup_filters['tag-water'] = [ 35088,35056,35024 ];
 
 
-fs.createReadStream('ChanList.csv').pipe(csv.parse()).pipe(csv.transform(function(row) {     
-    console.log(row);
-        channels[row.Num] = {
+fs.createReadStream('ChanList.csv').pipe(csv.parse({columns: true, skip_empty_lines: true})).pipe(csv.transform(function(row) {     
+//    console.log(row);
+    channels[row.Num] = {
       alpha: row.Alpha,
       desc: row.Description,
       tag: row.Tag,
       group: row.Group
     };
+//    console.log(channels);
     var tg_array = new Array();
     tg_array.push(parseInt(row.Num));
     talkgroup_filters['tg-' + row.Num] = tg_array;
@@ -967,10 +973,16 @@ function notify_clients(call) {
     }
   }
 }
-watch.createMonitor(__dirname+'/smartnet-upload', function(monitor) {
-  monitor.files['*.m4a'];
-  //monitor.files['*.wav'];
 
+var source_path = __dirname+'/smartnet-upload';
+
+if (!fs.existsSync(source_path)){
+	fs.mkdirSync(source_path);
+	console.log("Created Path: " + source_path);
+}
+
+watch.createMonitor(source_path, function(monitor) {
+  monitor.files['*.m4a'];
 
   monitor.on("created", function(f, stat) {
 
@@ -1088,9 +1100,6 @@ watch.createMonitor(__dirname+'/smartnet-upload', function(monitor) {
   });
 });
 
-io.set('close timeout', 200);
-io.set('heartbeat timeout', 200);
-io.set('heartbeat interval', 90);
 io.sockets.on('connection', function(socket) {
   var client = {
     id: socket.id,
